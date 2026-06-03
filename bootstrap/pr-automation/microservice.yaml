@@ -36,6 +36,8 @@ spec:
 
     cluster: {{ context.cluster }}
     image: {{ context.imageRepository }}:{{ context.tag }}
+
+    Plural Service: mgmt/gitops-example
   identifier: pluralsh/gitops-examples
   branch: main
   configuration:
