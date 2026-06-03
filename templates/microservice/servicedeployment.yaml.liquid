@@ -2,15 +2,16 @@ apiVersion: deployments.plural.sh/v1alpha1
 kind: ServiceDeployment
 metadata:
   name: {{ context.name }}-{{ context.environment }}
-  namespace: infra
+  namespace: gitops-example
 spec:
   namespace: {{ context.name }}
   name: {{ context.name }}-{{ context.environment }}
   flowRef:
     name: {{ context.name }}
+    namespace: gitops-example
   repositoryRef:
     kind: GitRepository
-    name: example-charts
+    name: gitops-example
     namespace: infra
   git:
     ref: main

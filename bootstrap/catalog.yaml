@@ -1,0 +1,12 @@
+apiVersion: deployments.plural.sh/v1alpha1
+kind: Catalog
+metadata:
+  name: gitops-example
+  namespace: gitops-example
+spec:
+  name: gitops-example
+  category: devops
+  icon: https://docs.plural.sh/favicon-128.png
+  author: Plural
+  description: |
+    Example GitOps self-service automations for creating and updating stateless microservices.

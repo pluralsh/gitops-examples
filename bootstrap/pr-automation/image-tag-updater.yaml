@@ -2,8 +2,10 @@ apiVersion: deployments.plural.sh/v1alpha1
 kind: PrAutomation
 metadata:
   name: image-tag-updater
+  namespace: gitops-example
 spec:
   name: image-tag-updater
+  icon: https://docs.plural.sh/favicon-128.png
   documentation: |
     Opens a PR to update the image tag for an environment-specific microservice values file.
   updates:
@@ -14,6 +16,10 @@ spec:
             tag: "{{ context.tag }}"
   scmConnectionRef:
     name: plural
+    namespace: infra
+  catalogRef:
+    name: gitops-example
+    namespace: gitops-example
   title: "Updating {{ context.name }} {{ context.environment }} image to {{ context.tag }}"
   message: |
     Updating {{ context.name }} {{ context.environment }} image to {{ context.tag }}

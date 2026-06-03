@@ -2,8 +2,10 @@ apiVersion: deployments.plural.sh/v1alpha1
 kind: PrAutomation
 metadata:
   name: microservice-creator
+  namespace: gitops-example
 spec:
   name: microservice-creator
+  icon: https://docs.plural.sh/favicon-128.png
   documentation: |
     Sets up a basic stateless microservice using the local stateless Helm chart.
 
@@ -24,6 +26,10 @@ spec:
         external: false
   scmConnectionRef:
     name: plural
+    namespace: infra
+  catalogRef:
+    name: gitops-example
+    namespace: gitops-example
   title: "Setting up {{ context.environment }} microservice {{ context.name }}"
   message: |
     Setting up {{ context.environment }} microservice {{ context.name }}
