@@ -1,0 +1,40 @@
+apiVersion: deployments.plural.sh/v1alpha1
+kind: PrAutomation
+metadata:
+  name: image-tag-updater
+spec:
+  name: image-tag-updater
+  documentation: |
+    Opens a PR to update the image tag for an environment-specific microservice values file.
+  updates:
+    yamlOverlays:
+      - file: "deployments/helm/{{ context.name }}/{{ context.environment }}.yaml"
+        yaml: |
+          image:
+            tag: "{{ context.tag }}"
+  scmConnectionRef:
+    name: plural
+  title: "Updating {{ context.name }} {{ context.environment }} image to {{ context.tag }}"
+  message: |
+    Updating {{ context.name }} {{ context.environment }} image to {{ context.tag }}
+
+    This changes deployments/helm/{{ context.name }}/{{ context.environment }}.yaml.
+  identifier: pluralsh/example-charts
+  branch: main
+  configuration:
+    - name: name
+      type: STRING
+      documentation: DNS-safe name of the microservice to update.
+      validation:
+        regex: "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+    - name: environment
+      type: ENUM
+      documentation: Environment values file to update.
+      default: dev
+      values:
+        - dev
+        - staging
+        - prod
+    - name: tag
+      type: STRING
+      documentation: New container image tag to deploy.

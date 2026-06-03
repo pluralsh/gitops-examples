@@ -1,0 +1,19 @@
+image:
+  repository: "{{ context.imageRepository }}"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: {{ context.port }}
+
+serviceAccount:
+  create: true
+  automount: true
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi

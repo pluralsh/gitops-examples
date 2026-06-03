@@ -1,0 +1,59 @@
+name: Publish Stateless Chart
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "charts/stateless/**"
+      - ".github/workflows/publish-stateless-chart.yaml"
+  push:
+    branches:
+      - main
+    paths:
+      - "charts/stateless/**"
+      - ".github/workflows/publish-stateless-chart.yaml"
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  CHART_PATH: charts/stateless
+  OCI_REGISTRY: ghcr.io
+  OCI_REPOSITORY: pluralsh/example-charts
+
+jobs:
+  publish:
+    name: Publish stateless chart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Lint chart
+        run: helm lint "$CHART_PATH"
+
+      - name: Read chart version
+        id: chart
+        run: |
+          set -euo pipefail
+          version=$(awk -F': *' '/^version:/ {print $2; exit}' "$CHART_PATH/Chart.yaml")
+          if [ -z "$version" ]; then
+            echo "Missing version in $CHART_PATH/Chart.yaml" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Package chart
+        run: helm package "$CHART_PATH" --destination dist
+
+      - name: Log in to GHCR
+        if: ${{ github.event_name != 'pull_request' }}
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login "$OCI_REGISTRY" --username "${{ github.actor }}" --password-stdin
+
+      - name: Push chart
+        if: ${{ github.event_name != 'pull_request' }}
+        run: helm push "dist/stateless-${{ steps.chart.outputs.version }}.tgz" "oci://$OCI_REGISTRY/$OCI_REPOSITORY"

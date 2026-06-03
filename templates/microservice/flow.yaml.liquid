@@ -1,0 +1,7 @@
+apiVersion: deployments.plural.sh/v1alpha1
+kind: Flow
+metadata:
+  name: {{ context.name }}
+spec:
+  name: {{ context.name }}
+  description: Basic stateless microservice for {{ context.environment }}.

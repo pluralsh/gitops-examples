@@ -1,0 +1,47 @@
+name: Validate Stateless Values
+
+on:
+  pull_request:
+    paths:
+      - "charts/stateless/**"
+      - "deployments/helm/**/*.yaml"
+      - "deployments/helm/**/*.yml"
+      - ".github/workflows/validate-stateless-values.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CHART_PATH: charts/stateless
+  VALUES_PATH: deployments/helm
+
+jobs:
+  validate:
+    name: Validate values files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Validate chart defaults
+        run: helm lint "$CHART_PATH"
+
+      - name: Validate registered values files
+        run: |
+          set -euo pipefail
+          shopt -s nullglob globstar
+
+          values_files=("$VALUES_PATH"/**/*.yaml "$VALUES_PATH"/**/*.yml)
+          if [ ${#values_files[@]} -eq 0 ]; then
+            echo "No values files found under $VALUES_PATH"
+            exit 0
+          fi
+
+          for values_file in "${values_files[@]}"; do
+            echo "Validating $values_file"
+            helm lint "$CHART_PATH" --values "$values_file"
+          done

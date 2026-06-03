@@ -1,0 +1,25 @@
+apiVersion: deployments.plural.sh/v1alpha1
+kind: ServiceDeployment
+metadata:
+  name: {{ context.name }}-{{ context.environment }}
+  namespace: infra
+spec:
+  namespace: {{ context.name }}
+  name: {{ context.name }}-{{ context.environment }}
+  flowRef:
+    name: {{ context.name }}
+  repositoryRef:
+    kind: GitRepository
+    name: example-charts
+    namespace: infra
+  git:
+    ref: main
+    folder: deployments/helm/{{ context.name }}
+  helm:
+    version: "{{ context.chartVersion }}"
+    url: oci://ghcr.io/pluralsh/example-charts
+    chart: stateless
+    valuesFiles:
+      - base.yaml
+      - {{ context.environment }}.yaml
+  cluster: {{ context.cluster }}

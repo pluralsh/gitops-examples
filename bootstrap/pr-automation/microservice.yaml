@@ -1,0 +1,78 @@
+apiVersion: deployments.plural.sh/v1alpha1
+kind: PrAutomation
+metadata:
+  name: microservice-creator
+spec:
+  name: microservice-creator
+  documentation: |
+    Sets up a basic stateless microservice using the local stateless Helm chart.
+
+    This creates a Flow, a ServiceDeployment, and base plus environment-specific Helm values files.
+  creates:
+    templates:
+      - source: templates/microservice/base-values.yaml.liquid
+        destination: "deployments/helm/{{ context.name }}/base.yaml"
+        external: false
+      - source: templates/microservice/env-values.yaml.liquid
+        destination: "deployments/helm/{{ context.name }}/{{ context.environment }}.yaml"
+        external: false
+      - source: templates/microservice/servicedeployment.yaml.liquid
+        destination: "bootstrap/deployments/{{ context.name }}-{{ context.environment }}.yaml"
+        external: false
+      - source: templates/microservice/flow.yaml.liquid
+        destination: "bootstrap/flows/{{ context.name }}.yaml"
+        external: false
+  scmConnectionRef:
+    name: plural
+  title: "Setting up {{ context.environment }} microservice {{ context.name }}"
+  message: |
+    Setting up {{ context.environment }} microservice {{ context.name }}
+
+    cluster: {{ context.cluster }}
+    image: {{ context.imageRepository }}:{{ context.tag }}
+    domain: {{ context.domain }}
+  identifier: pluralsh/example-charts
+  branch: main
+  configuration:
+    - name: name
+      type: STRING
+      documentation: DNS-safe name for the microservice.
+      validation:
+        regex: "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+    - name: environment
+      type: ENUM
+      documentation: Environment-specific values file to create.
+      default: dev
+      values:
+        - dev
+        - staging
+        - prod
+    - name: cluster
+      type: CLUSTER
+      documentation: Cluster handle where the microservice will be deployed.
+    - name: group
+      type: STRING
+      documentation: Plural group that can write to the generated flow.
+      default: sre
+    - name: imageRepository
+      type: STRING
+      documentation: Container image repository, without the tag.
+      placeholder: ghcr.io/pluralsh/my-service
+    - name: tag
+      type: STRING
+      documentation: Container image tag to deploy.
+      default: latest
+    - name: port
+      type: STRING
+      documentation: Container and service port exposed by the application.
+      default: "80"
+      validation:
+        regex: "^[0-9]+$"
+    - name: domain
+      type: STRING
+      documentation: Public DNS name for this environment.
+      placeholder: app.example.com
+    - name: chartVersion
+      type: STRING
+      documentation: Version of the stateless chart to deploy from GHCR.
+      default: "0.1.0"
