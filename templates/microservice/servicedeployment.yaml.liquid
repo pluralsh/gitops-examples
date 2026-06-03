@@ -17,7 +17,6 @@ spec:
     ref: main
     folder: deployments/helm/{{ context.name }}
   helm:
-    version: "{{ context.chartVersion }}"
     url: oci://ghcr.io/pluralsh/example-charts
     chart: stateless
     valuesFiles:

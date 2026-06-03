@@ -36,7 +36,6 @@ spec:
 
     cluster: {{ context.cluster }}
     image: {{ context.imageRepository }}:{{ context.tag }}
-    domain: {{ context.domain }}
   identifier: pluralsh/gitops-examples
   branch: main
   configuration:
@@ -74,11 +73,3 @@ spec:
       default: "80"
       validation:
         regex: "^[0-9]+$"
-    - name: domain
-      type: STRING
-      documentation: Public DNS name for this environment.
-      placeholder: app.example.com
-    - name: chartVersion
-      type: STRING
-      documentation: Version of the stateless chart to deploy from GHCR.
-      default: "0.1.0"
