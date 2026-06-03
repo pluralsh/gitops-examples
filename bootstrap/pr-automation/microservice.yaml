@@ -37,7 +37,7 @@ spec:
     cluster: {{ context.cluster }}
     image: {{ context.imageRepository }}:{{ context.tag }}
     domain: {{ context.domain }}
-  identifier: pluralsh/gitops-example
+  identifier: pluralsh/gitops-examples
   branch: main
   configuration:
     - name: name

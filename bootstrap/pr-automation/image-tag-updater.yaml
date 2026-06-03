@@ -25,7 +25,7 @@ spec:
     Updating {{ context.name }} {{ context.environment }} image to {{ context.tag }}
 
     This changes deployments/helm/{{ context.name }}/{{ context.environment }}.yaml.
-  identifier: pluralsh/gitops-example
+  identifier: pluralsh/gitops-examples
   branch: main
   configuration:
     - name: name
