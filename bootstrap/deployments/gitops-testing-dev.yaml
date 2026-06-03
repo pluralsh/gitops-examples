@@ -1,0 +1,25 @@
+apiVersion: deployments.plural.sh/v1alpha1
+kind: ServiceDeployment
+metadata:
+  name: gitops-testing-dev
+  namespace: gitops-example
+spec:
+  namespace: gitops-testing
+  name: gitops-testing-dev
+  flowRef:
+    name: gitops-testing
+    namespace: gitops-example
+  repositoryRef:
+    kind: GitRepository
+    name: gitops-example
+    namespace: infra
+  git:
+    ref: main
+    folder: deployments/helm/gitops-testing
+  helm:
+    url: oci://ghcr.io/pluralsh/example-charts
+    chart: stateless
+    valuesFiles:
+      - base.yaml
+      - dev.yaml
+  cluster: demo-dev
