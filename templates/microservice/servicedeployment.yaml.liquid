@@ -19,6 +19,7 @@ spec:
   helm:
     url: oci://ghcr.io/pluralsh/example-charts
     chart: stateless
+    version: 0.1.0
     valuesFiles:
       - base.yaml
       - {{ context.environment }}.yaml

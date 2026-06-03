@@ -1,8 +1,0 @@
-apiVersion: deployments.plural.sh/v1alpha1
-kind: Flow
-metadata:
-  name: gitops-testing
-  namespace: gitops-example
-spec:
-  name: gitops-testing
-  description: Basic stateless microservice for dev.
