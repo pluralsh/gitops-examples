@@ -5,4 +5,4 @@ metadata:
   namespace: gitops-example
 spec:
   name: example
-  description: Basic stateless microservice for dev.
+  description: Basic stateless microservice for staging.
