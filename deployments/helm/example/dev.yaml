@@ -1,7 +1,5 @@
-replicaCount: 1
-
 image:
-  tag: "latest"
-
+  tag: 0.1.0
 podLabels:
-  plural.sh/environment: "dev"
+  plural.sh/environment: dev
+replicaCount: 1
