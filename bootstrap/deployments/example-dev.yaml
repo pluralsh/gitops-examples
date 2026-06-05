@@ -1,0 +1,26 @@
+apiVersion: deployments.plural.sh/v1alpha1
+kind: ServiceDeployment
+metadata:
+  name: example-dev
+  namespace: gitops-example
+spec:
+  namespace: example
+  name: example-dev
+  flowRef:
+    name: example
+    namespace: gitops-example
+  repositoryRef:
+    kind: GitRepository
+    name: gitops-example
+    namespace: infra
+  git:
+    ref: main
+    folder: deployments/helm/example
+  helm:
+    url: oci://ghcr.io/pluralsh/example-charts
+    chart: stateless
+    version: 0.1.0
+    valuesFiles:
+      - base.yaml
+      - dev.yaml
+  cluster: demo-dev
