@@ -1,0 +1,8 @@
+apiVersion: deployments.plural.sh/v1alpha1
+kind: Flow
+metadata:
+  name: example-prod
+  namespace: gitops-example
+spec:
+  name: example-prod
+  description: Basic stateless microservice for dev.
